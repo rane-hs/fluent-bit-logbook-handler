@@ -1,0 +1,25 @@
+version: "3.2"
+services:
+  logger-container:
+    image: fluent/fluent-bit:1.4
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    networks:
+      - nw
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+  ##################################################
+  # base images
+  ##################################################
+  sample:
+    image: python:3.9.9-buster
+    tty: true
+    volumes:
+      - ./:/app
+    working_dir: /app
+    networks:
+      - nw
+    entrypoint: "bash -c \"pip3 install -r /app/requirements.txt; python3 /app/sample.py\""
+networks:
+  nw:
